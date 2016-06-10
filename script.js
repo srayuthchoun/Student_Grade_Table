@@ -6,7 +6,6 @@ $(function ($) { // jQuery shorthand for document ready
         //FirebaseRef is referenced to the database.
         firebaseRef = new Firebase("https://fiery-fire-3460.firebaseio.com/students");
 
-
     // Submit button click handler that gets the values from the add student form
     submitBtn.click(function () {
         var studentName = $('#s-name-input').val(),
@@ -22,6 +21,20 @@ $(function ($) { // jQuery shorthand for document ready
         });
         clearInputs();
     });
+
+    //Calculate Average
+    var total = [];
+    function calculateAverage() {
+        var gradesTotal = 0;
+
+        for (var i = 0; i < total.length; i++) {
+            gradesTotal += parseInt(total[i]);
+        }
+
+        average = (gradesTotal / total.length).toFixed(2);
+        $('.avgGrade').text(average);
+        console.log(average);
+    }
 
     /** Read Operations **/
 
@@ -80,18 +93,17 @@ $(function ($) { // jQuery shorthand for document ready
             name: newName,
             course: newCourse,
             grade: newGrade
-        })
+        });
     }
 
     // Click handler for modal confirm button
     $("#edit-modal").on('click', '#confirm-edit', function () {
-        console.log("im here");
         console.log("('#edit-modal').find('#student-id').val() :", $('#edit-modal').find('#student-id').val());
         var studentFirebaseRef = firebaseRef.child($('#edit-modal').find('#student-id').val());
         // Sends the correct variable into the student edit function
         studentEdit(studentFirebaseRef);
         $("#edit-modal").modal('hide');
-    })
+    });
 
     /** Delete Operations **/
 
@@ -105,8 +117,10 @@ $(function ($) { // jQuery shorthand for document ready
             var rowId = snapshot.key();
             $('#' + rowId).remove();
         });
+
         // Delete the student with the firebase method
         studentFirebaseRef.remove();
+
     });
 
     // Clear out inputs in the add-student-form
@@ -121,6 +135,8 @@ $(function ($) { // jQuery shorthand for document ready
         var studentObject = studentSnapShot.val();
         var studentObjectId = studentSnapShot.key();
         var studentRow = $("#" + studentObjectId);
+        total.push(studentSnapShot.val().grade);
+
         if (studentRow.length > 0) {
             //change current
             studentRow.find(".student-name").text(studentObject.name);
@@ -140,7 +156,7 @@ $(function ($) { // jQuery shorthand for document ready
                     text: studentObject.grade,
                     class: "student-grade"
                 }),
-            /* Each student gets a unique edit and delete button appended to its row */
+            //Each student gets a unique edit and delete button appended to its row
                 sEditBtn = $('<button>', {
                     class: "btn btn-info edit-btn",
                     'data-id': studentObjectId
@@ -156,7 +172,7 @@ $(function ($) { // jQuery shorthand for document ready
                     class: "glyphicon glyphicon-remove"
                 });
 
-            var studentRow = $('<tr>', {
+            studentRow = $('<tr>', {
                 id: studentObjectId
             });
             sEditBtn.append(sEditBtnIcon);
@@ -164,5 +180,6 @@ $(function ($) { // jQuery shorthand for document ready
             studentRow.append(sName, sCourse, sGrade, sEditBtn, sDeleteBtn);
             sgtTableElement.append(studentRow);
         }
+        calculateAverage();
     }
 });
