@@ -14,27 +14,22 @@ $(function ($) { // jQuery shorthand for document ready
 
 
         // Send the values to firebase database. firebaseRef.push will append a new item to the user list
+        if ((studentName !== '') && (studentCourse !== '') && (studentGrade !== '')) {
         firebaseRef.push({
             name: studentName,
             course: studentCourse,
             grade: studentGrade
+
         });
+    }
         clearInputs();
     });
 
-    //Calculate Average
-    var total = [];
-    function calculateAverage() {
-        var gradesTotal = 0;
+    //Cancel button to clear inputs in add student form
+    $('#cancel-btn').click(function(){
+        clearInputs();
+    });
 
-        for (var i = 0; i < total.length; i++) {
-            gradesTotal += parseInt(total[i]);
-        }
-
-        average = (gradesTotal / total.length).toFixed(2);
-        $('.avgGrade').text(average);
-        console.log(average);
-    }
 
     /** Read Operations **/
 
@@ -53,6 +48,7 @@ $(function ($) { // jQuery shorthand for document ready
         console.log("The read failed: " + errorObject.code);
     });
 
+
     /** Update Operations **/
 
     /** Edit button handler
@@ -61,6 +57,7 @@ $(function ($) { // jQuery shorthand for document ready
     sgtTableElement.on('click', '.edit-btn', function () {
         var student_id = $(this).data('id');
         var studentFirebaseRef = firebaseRef.child(student_id);
+        console.log("firebaseref.child" + firebaseRef.child(student_id));
 
         /** Once method method will listen for an event only once and use it to pre-fill the inputs in the form for a
          * better user experience
@@ -120,7 +117,6 @@ $(function ($) { // jQuery shorthand for document ready
 
         // Delete the student with the firebase method
         studentFirebaseRef.remove();
-
     });
 
     // Clear out inputs in the add-student-form
@@ -135,8 +131,6 @@ $(function ($) { // jQuery shorthand for document ready
         var studentObject = studentSnapShot.val();
         var studentObjectId = studentSnapShot.key();
         var studentRow = $("#" + studentObjectId);
-        total.push(studentSnapShot.val().grade);
-
         if (studentRow.length > 0) {
             //change current
             studentRow.find(".student-name").text(studentObject.name);
@@ -180,6 +174,5 @@ $(function ($) { // jQuery shorthand for document ready
             studentRow.append(sName, sCourse, sGrade, sEditBtn, sDeleteBtn);
             sgtTableElement.append(studentRow);
         }
-        calculateAverage();
     }
 });
