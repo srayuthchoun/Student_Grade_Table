@@ -163,7 +163,7 @@ $(function ($) { // jQuery shorthand for document ready
                     'data-id': studentObjectId
                 }),
                 sDeleteBtnIcon = $('<span>', {
-                    class: "glyphicon glyphicon-remove"
+                    class: "glyphicon glyphicon-trash"
                 });
 
             studentRow = $('<tr>', {
