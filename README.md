@@ -1,4 +1,4 @@
-# [Student Grade Table] (http://chipchoun.com/Student_Grade_Table/)
+# Student Grade Table [Demo] (http://chipchoun.com/Student_Grade_Table/)
 
 ## About the Project
 
